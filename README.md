@@ -38,6 +38,7 @@ POSTGRES_USER=postgres
 POSTGRES_PASSWORD=your_secure_password_here
 POSTGRES_DB=postgres
 POSTGRES_PORT=5432
+TZ=Asia/Hong_Kong  # 時區設定（可選，預設為 UTC）
 ```
 
 ### 2. 啟動 PostgreSQL
@@ -146,6 +147,49 @@ docker-compose restart postgres
 
 ```bash
 docker-compose restart postgres
+```
+
+#### 時區設定
+
+有兩種方式可以設定時區：
+
+**方法 1：使用環境變數（推薦）**
+
+在 `.env` 檔案中設定 `TZ` 環境變數：
+
+```bash
+TZ=Asia/Hong_Kong
+```
+
+常用時區範例：
+- `Asia/Hong_Kong` - 香港時區
+- `Asia/Taipei` - 台北時區
+- `Asia/Shanghai` - 上海時區
+- `UTC` - 協調世界時（預設）
+- `America/New_York` - 美國東部時區
+- `Europe/London` - 倫敦時區
+
+**方法 2：修改 PostgreSQL 配置檔案**
+
+直接修改 `postgres/config/postgresql.conf` 中的 `timezone` 設定：
+
+```conf
+timezone = 'Asia/Hong_Kong'
+```
+
+**驗證時區設定**
+
+設定完成後，重啟服務並驗證：
+
+```bash
+# 重啟服務
+docker-compose restart postgres
+
+# 檢查容器系統時區
+docker-compose exec postgres date
+
+# 檢查 PostgreSQL 時區
+docker-compose exec postgres psql -U postgres -c "SHOW timezone;"
 ```
 
 ### 用戶認證配置 (pg_hba.conf)
